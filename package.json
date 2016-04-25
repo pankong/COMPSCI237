@@ -1,0 +1,31 @@
+{
+  "name": "compsci237",
+  "version": "1.0.0",
+  "description": "a scalable driver-rider matching web application",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pankong/COMPSCI237.git"
+  },
+  "author": "pankong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pankong/COMPSCI237/issues"
+  },
+  "homepage": "https://github.com/pankong/COMPSCI237#readme",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.15.0",
+    "cookie-parser": "^1.4.1",
+    "ejs": "^2.4.1",
+    "ejs-mate": "^2.3.0",
+    "express": "^4.13.4",
+    "express-flash": "0.0.2",
+    "express-session": "^1.13.0",
+    "mongoose": "^4.4.13",
+    "morgan": "^1.7.0"
+  }
+}

@@ -1,0 +1,27 @@
+<% layout('layout') %>
+<div class="container">
+  <div class="row">
+    <% if (user.type === 'driver') { %>
+      <h2> Driver's Profile </h2>
+    <%} else { %>
+      <h2> Rider's Profile </h2>
+    <% } %>
+  </div> <!-- /row -->
+  <div class="row">
+    <div class="col-sm-6 col-md-4">
+      <br>
+      <br>
+      <p>Name: <%= user.profile.name %></p>
+      <p>Email: <%= user.email %></p>
+      <% if (user.address === "" || typeof user.address === 'undefined')  { %>
+        <p>Address: <span style="color: #c0392b; font-weight: bold">no address</span></p>
+      <% } else { %>
+        <p>Address: <%= user.address %></p>
+      <% } %>
+      <a href="/edit-profile" class="btn btn-primary btn-lg">Edit Profile</a>
+    </div> <!-- /column -->
+    <div class="col-sm-6 col-md-4">
+      <img class="img-circle img-responsive img-center" src="<%= user.profile.picture %>" alt="">
+    </div> <!-- /column -->
+  </div> <!-- /row -->
+</div> <!-- /container -->

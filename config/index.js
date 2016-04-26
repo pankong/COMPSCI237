@@ -6,5 +6,5 @@ module.exports = {
     + ':' + configValues.password
     + '@ds019491.mlab.com:19491/matching';
   },
-  "secret": "compsci237"
+  "secretKey": "compsci237"
 }

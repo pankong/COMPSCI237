@@ -12,17 +12,37 @@
     <div class="col-md-4">
       <h2>Start your riding</h2>
       <p>Always the ride you want</br>The best way to get wherever you’re going</p>
-      <p><a class="btn btn-primary btn-lg" href="/signup" role="button">Sign up as rider &raquo;</a></p>
+      <% if (user) { %>
+        <% if (user.type === 'driver') { %>
+          <p><a class="btn btn-default btn-lg" href="#" role="button">Request a ride &raquo;</a></p>
+        <% } else { %>
+          <p><a class="btn btn-success btn-lg" href="/ride" role="button">Request a ride &raquo;</a></p>
+        <% } %>
+      <% } else { %>
+        <p><a class="btn btn-primary btn-lg" href="/signup" role="button">Sign up as rider &raquo;</a></p>
+      <% } %>
     </div>
     <div class="col-md-4">
       <h2>Start your driving</h2>
       <p>Work that puts you first</br>Drive when you want, earn what you need</p>
-      <p><a class="btn btn-primary btn-lg" href="/signup" role="button">Sign up as driver &raquo;</a></p>
+      <% if (user) { %>
+        <% if (user.type === 'driver') { %>
+          <p><a class="btn btn-success btn-lg" href="/drive" role="button">Update location &raquo;</a></p>
+        <% } else { %>
+          <p><a class="btn btn-default btn-lg" href="#" role="button">Update location &raquo;</a></p>
+        <% } %>
+      <% } else { %>
+        <p><a class="btn btn-primary btn-lg" href="/signup" role="button">Sign up as driver &raquo;</a></p>
+      <% } %>
     </div>
     <div class="col-md-4">
       <h2>Learn more</h2>
       <p>Get there</br>Your day belongs to you</p>
-      <p><a class="btn btn-primary btn-lg" href="/about" role="button">View details &raquo;</a></p>
+      <% if (user) { %>
+        <p><a class="btn btn-success btn-lg" href="/about" role="button">View details &raquo;</a></p>
+      <% } else { %>
+        <p><a class="btn btn-primary btn-lg" href="/about" role="button">View details &raquo;</a></p>
+      <% } %>
     </div>
   </div> <!-- /row -->
 </div> <!-- /container -->

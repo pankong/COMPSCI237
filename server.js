@@ -57,10 +57,10 @@ app.use(function(req, res, next) {
 
 var mainRoutes = require('./routes/main');
 var userRoutes = require('./routes/user');
-
+var matchRoutes = require('./routes/match');
 app.use(mainRoutes);
 app.use(userRoutes);
-
+app.use(matchRoutes);
 
 app.listen(port, function(err) {
   if (err) throw err;

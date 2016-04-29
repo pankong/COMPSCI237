@@ -1,3 +1,5 @@
+"use strict";
+
 const router = require('express').Router();
 const util = require('util');
 const async = require('async');
@@ -58,7 +60,7 @@ router.post('/drive', function(req, res, next) {
     driver.location.longitude = req.body.longitude;
     driver.location.latitude = req.body.latitude;
     console.log(req.body.longitude);
-    console.log(driver.location.longitude);
+    console.log(driver.location.latitude);
     driver.save(function(err) {
       if (err) return next(err);
     });

@@ -13,8 +13,8 @@ function postRiderPosition(position) {
   console.log("Latitude: " + position.coords.latitude);
   console.log("Longitude: " + position.coords.longitude);
   $.post("/ride",{
-    "Latitude": position.coords.latitude,
-    "Longitude": position.coords.longitude
+    "latitude": position.coords.latitude,
+    "longitude": position.coords.longitude
   },function(message, status){
         alert(message + "Status: " + status);
     });
@@ -46,7 +46,7 @@ function postDriverPosition(position) {
   console.log("Latitude: " + position.coords.latitude);
   console.log("Longitude: " + position.coords.longitude);
   $.post("/drive",{
-    "Latitude": position.coords.latitude,
-    "Longitude": position.coords.longitude
+    "latitude": position.coords.latitude,
+    "longitude": position.coords.longitude
   });
 };

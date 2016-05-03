@@ -1,15 +1,48 @@
 <% layout('layout') %>
 
 <div class="container">
-  <h2>
-    This page will periodically request driver's location
-  </h2>
-  <button class="btn btn-success btn-large" onclick="updateLocation()">Update location</button>
-  <button class="btn btn-success btn-large" onclick="simulateDriving()">Simulate driving</button>
-  <br>
-  <br>
+  <h2>This page will periodically request driver's location</h2>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-group">
+        <button class="btn btn-success btn-large" id="updateLocation">Update location</button>
+        &nbsp;
+        <button class="btn btn-danger btn-sm" id="stopUpdate">Stop Updating</button>
+      </div>
+    </div> <!-- /column -->
+  </div> <!-- /row -->
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-group">
+        <button class="btn btn-success btn-large" id="simulateDrive">Simulate driving</button>
+        &nbsp;
+        <button class="btn btn-danger btn-sm" id="stopSimulate">Stop Simulating</button>
+      </div>
+    </div> <!-- /column -->
+  </div>  <!-- /row -->
   <h3>Updated <span id=updateInfo>0</span> times</h3>
-
 </div> <!-- /container -->
 
-<script src="assets/js/getLocation.js"></script>
+<script src="assets/js/getLocation.js" id="location"></script>
+<script>
+  $(document).ready(function(){
+    $("#updateLocation").click(function(){
+      updating = true;
+      updateLocation();
+    });
+    $("#stopUpdate").click(function(){
+      updating = false;
+      updateCount = 0;
+      console.log(updating);
+    });
+    $("#simulateDrive").click(function(){
+      simulating = true;
+      simulateDriving();
+    });
+    $("#stopSimulate").click(function(){
+      simulating = false;
+      updateCount = 0;
+    });
+
+  });
+</script>

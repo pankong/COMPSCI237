@@ -14,15 +14,18 @@ router.post('/ride', function(req, res, next) {
   util.log("Rider " + req.user.profile.name + " requested a ride");
   async.waterfall([
     function(callback) {
-      User.find({type: 'driver'}).count(function(err, numDrivers) {
+      User.find({type: 'driver', district: req.body.district}).count(function(err, numDrivers) {
         callback(null, numDrivers);
       })
     },
     function(numDrivers, callback) {
+      if (numDrivers == 0) {
+        callback(null, null);
+      }
       var minDist = Number.MAX_VALUE;
       var nearestDriver = null;
       var count = 0;
-      User.find({type: 'driver'}, function(err, drivers) {
+      User.find({type: 'driver', district: req.body.district}, function(err, drivers) {
         drivers.forEach(function(driver) {
           var dist = math.sqrt(math.pow(req.body.latitude - driver.location.latitude, 2)
           + math.pow(req.body.longitude - driver.location.longitude, 2));
@@ -59,12 +62,14 @@ router.post('/drive', function(req, res, next) {
     if (err) return next(err);
     driver.location.longitude = req.body.longitude;
     driver.location.latitude = req.body.latitude;
-    console.log(req.body.longitude);
-    console.log(driver.location.latitude);
+    driver.district = req.body.district;
     driver.save(function(err) {
       if (err) return next(err);
     });
-    util.log("Driver " + driver.profile.name + " sent in lcation udate");
+    util.log("Driver " + driver.profile.name + " sent in location update");
+    util.log("    " + req.body.longitude);
+    util.log("    " + req.body.latitude);
+    util.log("    " + req.body.district);
   });
 })
 

@@ -14,8 +14,8 @@ var UserSchema = new mongoose.Schema({
     picture: {type: String, default: ''},
     address: {type: String, default: ''}
   },
+  district: {type: Number, default: -1},
   location: {
-    district: {type: Number, default: -1},
     latitude: {type: Number, default: -1},
     longitude: {type: Number, default: -1}
   }

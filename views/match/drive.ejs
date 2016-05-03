@@ -27,21 +27,16 @@
 <script>
   $(document).ready(function(){
     $("#updateLocation").click(function(){
-      updating = true;
       updateLocation();
     });
     $("#stopUpdate").click(function(){
-      updating = false;
-      updateCount = 0;
-      console.log(updating);
+      stopUpdate();
     });
     $("#simulateDrive").click(function(){
-      simulating = true;
       simulateDriving();
     });
     $("#stopSimulate").click(function(){
-      simulating = false;
-      updateCount = 0;
+      stopSimulate();
     });
 
   });

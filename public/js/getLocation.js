@@ -33,9 +33,6 @@ const SantaTustinBound = -117.839670;
 const CostaIrvineBound = -117.896661;
 const TustinIrvineBound = 33.688811;
 
-var updating = false;
-var simulating = false;
-
 // takes position and determins which district the user is belonged to
 function getDistrict(latitude, longitude) {
   var district = -1;
@@ -80,27 +77,33 @@ function postRiderPosition(position) {
     });
 };
 
+var updateIntervalId;
+var updateCount;
+
 //retrieve driver's current location and post to the server periodically
 function updateLocation() {
   if (navigator.geolocation) {
     console.log('location found');
     // update location every 5 seconds
     var interval = 5000;
-    setInterval(setTime, interval);
-    var updateCount = 0;
+    updateIntervalId = setInterval(setTime, interval);
+    updateCount = 0;
     var updateInfo = document.getElementById("updateInfo");
     function setTime() {
-      if (updating) {
-        ++updateCount;
-        console.log(updateCount + "th update");
-        navigator.geolocation.getCurrentPosition(postDriverPosition);
-        updateInfo.innerHTML = updateCount;
-        }
+      ++updateCount;
+      console.log(updateCount + "th update");
+      navigator.geolocation.getCurrentPosition(postDriverPosition);
+      updateInfo.innerHTML = updateCount;
       };
     } else {
     console.log("Geolocation is not supported by this browser.");
   }
 };
+
+function stopUpdate() {
+  updateCount = 0;
+  clearInterval(updateIntervalId);
+}
 
 // post driver's location to server
 function postDriverPosition(position) {
@@ -115,6 +118,9 @@ function postDriverPosition(position) {
   });
 };
 
+var simulateIntervalId;
+var simulateCount;
+
 //simulate driver driving and post location updates to the server periodically
 function simulateDriving() {
   // start driving from UC Irvine
@@ -122,49 +128,51 @@ function simulateDriving() {
   var longitude = -117.84210205;
   // update location every 5 seconds
   var interval = 5000;
-  setInterval(setTime, interval);
-  var updateCount = 0;
+  simulateIntervalId = setInterval(setTime, interval);
+  simulateCount = 0;
   var updateInfo = document.getElementById("updateInfo");
-  function setTime()
-  {
-    if (simulating) {
-      ++updateCount;
-      var moveLat = Math.random() * 0.01;
-      var moveLon = Math.random() * 0.01;
-      if (moveLat < 0.005) {
-        latitude += moveLat;
-      } else {
-        latitude -= moveLat;
-      }
-      if (moveLon < 0.005) {
-        longitude += moveLon;
-      } else {
-        longitude -= moveLon;
-      }
-      // check if the driver goes beyond the bound
-      if (longitude > eastBound) {
-        longitude = eastBound;
-      }
-      else if (longitude < westBound) {
-        longitude = westBound;
-      }
-      if (latitude > northBound) {
-        latitude = northBound;
-      }
-      else if  (latitude < southBound) {
-        latitude = southBound;
-      }
-      var district = getDistrict(latitude, longitude);
-      console.log(updateCount + "th update");
-      console.log("   Latitude: " + latitude);
-      console.log("   Longitude: " + longitude);
-      console.log("   District: " + district);
-      $.post("/drive",{
-        "latitude": latitude,
-        "longitude": longitude,
-        "district": district
-      });
-      updateInfo.innerHTML = updateCount;
+  function setTime() {
+    ++simulateCount;
+    var moveLat = Math.random() * 0.01;
+    var moveLon = Math.random() * 0.01;
+    if (moveLat < 0.005) {
+      latitude += moveLat;
+    } else {
+      latitude -= moveLat;
     }
-  }
+    if (moveLon < 0.005) {
+      longitude += moveLon;
+    } else {
+      longitude -= moveLon;
+    }
+    // check if the driver goes beyond the bound
+    if (longitude > eastBound) {
+      longitude = eastBound;
+    }
+    else if (longitude < westBound) {
+      longitude = westBound;
+    }
+    if (latitude > northBound) {
+      latitude = northBound;
+    }
+    else if  (latitude < southBound) {
+      latitude = southBound;
+    }
+    var district = getDistrict(latitude, longitude);
+    console.log(simulateCount + "th update");
+    console.log("   Latitude: " + latitude);
+    console.log("   Longitude: " + longitude);
+    console.log("   District: " + district);
+    $.post("/drive",{
+      "latitude": latitude,
+      "longitude": longitude,
+      "district": district
+    });
+    updateInfo.innerHTML = simulateCount;
+  };
+}
+
+function stopSimulate() {
+  simulateCount = 0;
+  clearInterval(simulateIntervalId);
 }

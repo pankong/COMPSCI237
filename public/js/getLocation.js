@@ -176,3 +176,20 @@ function stopSimulate() {
   simulateCount = 0;
   clearInterval(simulateIntervalId);
 }
+
+$(document).ready(function(){
+  $("#updateLocation").click(function(){
+    document.getElementById("updateInfo").innerHTML = 0;
+    updateLocation();
+  });
+  $("#stopUpdate").click(function(){
+    stopUpdate();
+  });
+  $("#simulateDrive").click(function(){
+    document.getElementById("updateInfo").innerHTML = 0;
+    simulateDriving();
+  });
+  $("#stopSimulate").click(function(){
+    stopSimulate();
+  });
+});

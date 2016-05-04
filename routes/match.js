@@ -14,30 +14,36 @@ router.post('/ride', function(req, res, next) {
   util.log("Rider " + req.user.profile.name + " requested a ride");
   async.waterfall([
     function(callback) {
-      User.find({type: 'driver', district: req.body.district}).count(function(err, numDrivers) {
-        callback(null, numDrivers);
-      })
+      User.find({type: 'driver', district: req.body.district}, function(err, drivers) {
+        if (drivers.length == 0) {
+          User.find({type: 'driver'}, function(err, drivers) {
+            console.log("have to search whole db");
+            callback(null, drivers);
+          });
+        } else {
+          console.log("same distric found");
+          callback(null, drivers);
+        }
+      });
     },
-    function(numDrivers, callback) {
-      if (numDrivers == 0) {
+    function(drivers, callback) {
+      if (drivers.length == 0) {
         callback(null, null);
       }
       var minDist = Number.MAX_VALUE;
       var nearestDriver = null;
       var count = 0;
-      User.find({type: 'driver', district: req.body.district}, function(err, drivers) {
-        drivers.forEach(function(driver) {
-          var dist = math.sqrt(math.pow(req.body.latitude - driver.location.latitude, 2)
-          + math.pow(req.body.longitude - driver.location.longitude, 2));
-          if (dist < minDist) {
-            minDist = dist;
-            nearestDriver = driver;
-          }
-          count += 1;
-          if (count === numDrivers) {
-            callback(null, nearestDriver);
-          }
-        })
+      drivers.forEach(function(driver) {
+        var dist = math.sqrt(math.pow(req.body.latitude - driver.location.latitude, 2)
+        + math.pow(req.body.longitude - driver.location.longitude, 2));
+        if (dist < minDist) {
+          minDist = dist;
+          nearestDriver = driver;
+        }
+        count += 1;
+        if (count === drivers.length) {
+          callback(null, nearestDriver);
+        }
       });
     },
     function(nearestDriver, callback) {

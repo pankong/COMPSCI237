@@ -208,16 +208,22 @@ function stopSimulate() {
 $(document).ready(function(){
   $("#updateLocation").click(function(){
     document.getElementById("updateInfo").innerHTML = 0;
+    spinner.spin();
+    $('#loading').append(spinner.el);
     updateLocation();
   });
   $("#stopUpdate").click(function(){
+    spinner.stop();
     stopUpdate();
   });
   $("#simulateDrive").click(function(){
     document.getElementById("updateInfo").innerHTML = 0;
+    spinner.spin();
+    $('#loading').append(spinner.el);
     simulateDriving();
   });
   $("#stopSimulate").click(function(){
+    spinner.stop();
     stopSimulate();
   });
 });

@@ -20,6 +20,9 @@
           <button class="btn btn-danger btn-sm" id="stopSimulate">Stop Simulating</button>
         </div>
       </div> <!-- /column -->
+      <div class="col-md-4">
+        <div class="text-center" id="loading"></div>
+      </div> <!-- /column -->
     </div>  <!-- /row -->
     <h3>Updated <span id=updateInfo>0</span> times</h3>
   <% } else { %>
@@ -28,4 +31,5 @@
   <% } %>
 </div> <!-- /container -->
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
 <script src="assets/js/getLocation.js"></script>

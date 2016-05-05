@@ -44,14 +44,14 @@ router.post('/login', passport.authenticate('local-login', {
   failureFlash: true
 }));
 
-router.get('/profile', function(req, res, next) {
+router.get('/profile', passportConfig.isAuthenticated, function(req, res, next) {
   User.findById(req.user._id, function(err, user) {
     if (err) return next(err);
     res.render('accounts/profile', { user: user});
 });
 });
 
-router.get('/edit-profile', function(req, res, next) {
+router.get('/edit-profile', passportConfig.isAuthenticated, function(req, res, next) {
   res.render('accounts/edit-profile', {message: req.flash('message')});
 });
 

@@ -5,8 +5,9 @@ const util = require('util');
 const async = require('async');
 const math = require('mathjs');
 var User = require('../models/user.js');
+var passportConfig = require('../config/passport');
 
-router.get('/ride', function(req, res) {
+router.get('/ride', passportConfig.isAuthenticated, function(req, res) {
   res.render('match/ride');
 });
 
@@ -59,11 +60,11 @@ router.post('/ride', function(req, res, next) {
   ]);
 });
 
-router.get('/drive', function(req, res) {
+router.get('/drive', passportConfig.isAuthenticated, function(req, res) {
   res.render('match/drive');
 })
 
-router.post('/drive', function(req, res, next) {
+router.post('/drive', passportConfig.isAuthenticated, function(req, res, next) {
   User.findById(req.user._id, function(err, driver) {
     if (err) return next(err);
     driver.location.longitude = req.body.longitude;

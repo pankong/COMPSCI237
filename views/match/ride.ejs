@@ -1,13 +1,18 @@
 <% layout('layout') %>
 
 <div class="container">
-  <h2>This page will request rider's location and
-    then return the cloest driver's location and
-    time required to arrive
-  </h2>
-  <button class="btn btn-success btn-large" onclick="getLocation()">Request a ride</button>
-
-
+  <div class="row">
+    <h2>This page will request rider's location and
+      then return the cloest driver's location and
+      time required to arrive
+    </h2>
+    <button class="btn btn-success btn-large" onclick="requestRide()">Request a ride</button>
+  </div> <!-- /row -->
+  <div class="row">
+    <div class="text-center" id="loading">
+    </div>
+  </div>
 </div> <!-- /container -->
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
 <script src="assets/js/getLocation.js"></script>

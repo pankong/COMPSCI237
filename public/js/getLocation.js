@@ -92,7 +92,11 @@ var spinner = new Spinner(opts).spin();
 function requestRide() {
   if (navigator.geolocation) {
     console.log('location found');
-    navigator.geolocation.getCurrentPosition(postRiderPosition);
+    navigator.geolocation.getCurrentPosition(function(position) {
+      map.panTo({lat: position.coords.latitude, lng: position.coords.longitude});
+      createArrowMarker({lat: position.coords.latitude, lng: position.coords.longitude}, null).setMap(map);
+      postRiderPosition(position);
+    });
     spinner.spin();
     $('#loading').append(spinner.el);
   } else {

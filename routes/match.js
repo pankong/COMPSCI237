@@ -80,4 +80,8 @@ router.post('/drive', passportConfig.isAuthenticated, function(req, res, next) {
   });
 })
 
+router.get('/map', function(req, res) {
+  res.render('match/maptest');
+})
+
 module.exports = router;

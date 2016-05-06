@@ -24,6 +24,7 @@
   Tusin | Irvine: 33.688811
 */
 
+// global variables
 const northBound = 33.766973;
 const southBound = 33.612013;
 const eastBound = -117.756755;
@@ -31,6 +32,17 @@ const westBound = -117.938547;
 const SantaTustinBound = -117.839670;
 const CostaIrvineBound = -117.896661;
 const TustinIrvineBound = 33.688811;
+const UCILocation = {lat: 33.64091921, lng: -117.84210205};
+
+var updateIntervalId;
+var updateCount;
+
+var simulateIntervalId;
+var simulateCount;
+
+var map;
+var markers = [];
+
 
 // takes position and determins which district the user is belonged to
 function getDistrict(latitude, longitude) {
@@ -104,9 +116,6 @@ function postRiderPosition(position) {
   });
 };
 
-var updateIntervalId;
-var updateCount;
-
 //retrieve driver's current location and post to the server periodically
 function updateLocation() {
   if (navigator.geolocation) {
@@ -119,7 +128,10 @@ function updateLocation() {
     function setTime() {
       ++updateCount;
       console.log(updateCount + "th update");
-      navigator.geolocation.getCurrentPosition(postDriverPosition);
+      navigator.geolocation.getCurrentPosition(function(position) {
+        postDriverPosition(position.coords.latitude, position.coords.longitude);
+        trackDrivePath({lat: position.coords.latitude, lng: position.coords.longitude}, null);
+      });
       updateInfo.innerHTML = updateCount;
       };
     } else {
@@ -133,26 +145,23 @@ function stopUpdate() {
 }
 
 // post driver's location to server
-function postDriverPosition(position) {
-  var district = getDistrict(position.coords.latitude, position.coords.longitude);
-  console.log("   Latitude: " + position.coords.latitude);
-  console.log("   Longitude: " + position.coords.longitude);
+function postDriverPosition(latitude, longitude) {
+  var district = getDistrict(latitude, longitude);
+  console.log("   Latitude: " + latitude);
+  console.log("   Longitude: " + longitude);
   console.log("   District: " + district);
   $.post("/drive",{
-    "latitude": position.coords.latitude,
-    "longitude": position.coords.longitude,
+    "latitude": latitude,
+    "longitude": longitude,
     "district": district
   });
 };
 
-var simulateIntervalId;
-var simulateCount;
-
 //simulate driver driving and post location updates to the server periodically
 function simulateDriving() {
   // start driving from UC Irvine
-  var latitude = 33.64091921;
-  var longitude = -117.84210205;
+  var latitude = UCILocation.lat;
+  var longitude = UCILocation.lng;
   // update location every 5 seconds
   var interval = 5000;
   simulateIntervalId = setInterval(setTime, interval);
@@ -185,16 +194,9 @@ function simulateDriving() {
     else if  (latitude < southBound) {
       latitude = southBound;
     }
-    var district = getDistrict(latitude, longitude);
     console.log(simulateCount + "th update");
-    console.log("   Latitude: " + latitude);
-    console.log("   Longitude: " + longitude);
-    console.log("   District: " + district);
-    $.post("/drive",{
-      "latitude": latitude,
-      "longitude": longitude,
-      "district": district
-    });
+    postDriverPosition(latitude, longitude);
+    trackDrivePath({lat: latitude, lng: longitude}, null);
     updateInfo.innerHTML = simulateCount;
   };
 }
@@ -210,6 +212,7 @@ $(document).ready(function(){
     document.getElementById("updateInfo").innerHTML = 0;
     spinner.spin();
     $('#loading').append(spinner.el);
+    clearAllMarkers();;
     updateLocation();
   });
   $("#stopUpdate").click(function(){
@@ -220,6 +223,7 @@ $(document).ready(function(){
     document.getElementById("updateInfo").innerHTML = 0;
     spinner.spin();
     $('#loading').append(spinner.el);
+    clearAllMarkers();
     simulateDriving();
   });
   $("#stopSimulate").click(function(){
@@ -227,3 +231,71 @@ $(document).ready(function(){
     stopSimulate();
   });
 });
+
+// insert google map to display rider and driver location
+function initialize() {
+  map = new google.maps.Map(document.getElementById('googleMap'), {
+    zoom: 11,
+    center: UCILocation,
+    mapTypeId:google.maps.MapTypeId.ROADMAP
+  });
+}
+google.maps.event.addDomListener(window, 'load', initialize);
+
+
+function createCircleMarker(position, label) {
+  var marker = new google.maps.Marker({
+    position: position,
+    icon: {
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: 5
+    },
+    title: label
+  });
+  return marker;
+}
+
+function createArrowMarker(position, label) {
+  var marker = new google.maps.Marker({
+    position: position,
+    icon: {
+      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+      scale: 5
+    },
+    title: label
+  });
+  return marker;
+}
+
+// tracking driver's path using markers, arrow marker represents current location
+function trackDrivePath(position, label) {
+  // recenter the map at beginning
+  if (markers.length == 0) {
+    map.panTo(position)
+  }
+  const maxTrackPoints = 15;
+  var marker = createArrowMarker(position, label);
+  if (markers.length >= maxTrackPoints) {
+    // remove oldest marker
+    var oldestMarker = markers.shift();
+    oldestMarker.setMap(null);
+  }
+  if (markers.length > 0) {
+    // change sencond newest marker to circle marker
+    var sncdNewestMarker = markers.pop();
+    sncdNewestMarker.setMap(null);
+    sncdNewestMarker = createCircleMarker(sncdNewestMarker.getPosition(), label);
+    sncdNewestMarker.setMap(map);
+    markers.push(sncdNewestMarker);
+  }
+  // add newest marker
+  marker.setMap(map);
+  markers.push(marker);
+}
+
+// clear all the markers on map and empty the markers array
+function clearAllMarkers() {
+  while (markers.length != 0) {
+    markers.pop().setMap(null);
+  }
+}

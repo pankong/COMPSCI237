@@ -94,7 +94,8 @@ function requestRide() {
     console.log('location found');
     navigator.geolocation.getCurrentPosition(function(position) {
       map.panTo({lat: position.coords.latitude, lng: position.coords.longitude});
-      createArrowMarker({lat: position.coords.latitude, lng: position.coords.longitude}, null).setMap(map);
+      //createArrowMarker({lat: position.coords.latitude, lng: position.coords.longitude}, null).setMap(map);
+      createMarker({lat: position.coords.latitude, lng: position.coords.longitude}, null, "arrow").setMap(map);
       postRiderPosition(position);
     });
     spinner.spin();
@@ -247,23 +248,15 @@ function initialize() {
 google.maps.event.addDomListener(window, 'load', initialize);
 
 
-function createCircleMarker(position, label) {
+function createMarker(position, label, type) {
+  const markerType = {
+    "circle": google.maps.SymbolPath.CIRCLE,
+    "arrow": google.maps.SymbolPath.BACKWARD_CLOSED_ARROW
+  };
   var marker = new google.maps.Marker({
     position: position,
     icon: {
-      path: google.maps.SymbolPath.CIRCLE,
-      scale: 5
-    },
-    title: label
-  });
-  return marker;
-}
-
-function createArrowMarker(position, label) {
-  var marker = new google.maps.Marker({
-    position: position,
-    icon: {
-      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+      path: markerType[type],
       scale: 5
     },
     title: label
@@ -278,7 +271,8 @@ function trackDrivePath(position, label) {
     map.panTo(position)
   }
   const maxTrackPoints = 15;
-  var marker = createArrowMarker(position, label);
+  //var marker = createArrowMarker(position, label);
+  var marker = createMarker(position, label, "arrow");
   if (markers.length >= maxTrackPoints) {
     // remove oldest marker
     var oldestMarker = markers.shift();
@@ -288,7 +282,8 @@ function trackDrivePath(position, label) {
     // change sencond newest marker to circle marker
     var sncdNewestMarker = markers.pop();
     sncdNewestMarker.setMap(null);
-    sncdNewestMarker = createCircleMarker(sncdNewestMarker.getPosition(), label);
+    //sncdNewestMarker = createCircleMarker(sncdNewestMarker.getPosition(), label);
+    sncdNewestMarker = createMarker(sncdNewestMarker.getPosition(), label, "circle");
     sncdNewestMarker.setMap(map);
     markers.push(sncdNewestMarker);
   }

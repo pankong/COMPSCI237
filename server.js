@@ -9,6 +9,8 @@ const engine = require('ejs-mate');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const flash = require('express-flash');
+const MongoStore = require('connect-mongo/es5')(session);
+const passport = require('passport');
 var config = require('./config');
 
 var port = process.env.PORT || 3000;
@@ -36,20 +38,29 @@ app.use(cookieParser());
 app.use(session({
   resave: true,
   saveUninitialized: true,
-  secret: config.secret
+  secret: config.secretKey,
+  store: new MongoStore({ url: config.getMongoDbConnectionString(), autoReconnect: true})
 }));
 // add flash messages middleware
 app.use(flash());
+// add authentication middleware
+app.use(passport.initialize());
+app.use(passport.session());
 // set template engine
 app.engine('ejs', engine);
 app.set('view engine', 'ejs');
+// create a middleware to add user to all routes
+app.use(function(req, res, next) {
+  res.locals.user = req.user;
+  next();
+});
 
 var mainRoutes = require('./routes/main');
 var userRoutes = require('./routes/user');
-
+var matchRoutes = require('./routes/match');
 app.use(mainRoutes);
 app.use(userRoutes);
-
+app.use(matchRoutes);
 
 app.listen(port, function(err) {
   if (err) throw err;

@@ -1,0 +1,38 @@
+<% layout('layout') %>
+
+<div class="container">
+  <% if (user.type === 'driver') { %>
+    <h2>This page will periodically request driver's location</h2>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="form-group">
+          <button class="btn btn-success btn-large" id="updateLocation">Update location</button>
+          &nbsp;
+          <button class="btn btn-danger btn-sm" id="stopUpdate">Stop Updating</button>
+        </div> <!-- /form-group -->
+        <div class="form-group">
+          <button class="btn btn-success btn-large" id="simulateDrive">Simulate driving</button>
+          &nbsp;
+          <button class="btn btn-danger btn-sm" id="stopSimulate">Stop Simulating</button>
+        </div> <!-- /form-group -->
+        <h4>Updated <span id=updateInfo>0</span> times</h4>
+      </div> <!-- /column -->
+
+      <div class="col-md-0">
+        <div class="text-center" id="loading"></div>
+      </div> <!-- /column -->
+
+      <div class="col-md-4">
+        <div id="googleMap" style="width:600px;height:400px;"></div>
+      </div> <!-- /column -->
+    </div> <!-- /row -->
+
+  <% } else { %>
+    <h2> Sorry, you are currently signed in as a Rider </h2>
+    <h3> Please sign in as a Driver to start your drive </h3>
+  <% } %>
+</div> <!-- /container -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+<script src="http://maps.googleapis.com/maps/api/js"></script>
+<script src="assets/js/getLocation.js"></script>

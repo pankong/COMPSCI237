@@ -1,6 +1,48 @@
 <% layout('layout') -%>
-<h1>Find your nearest driver</h1>
-<p>A Apache Samza based web application for driver-rider matching</p>
 
-<h1>Signup to start</h1>
-<p>signup here includes email, user name and password</p>
+<div class="jumbotron">
+  <div class="container">
+    <h1>Get there in minutes</h1>
+    <p>Your day belongs to you. Wherever you’re headed, count on Us for rides in minutes. The Lyft app matches you with local drivers at the tap of a button. Just request and go.</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+      <h2>Start your riding</h2>
+      <p>Always the ride you want</br>The best way to get wherever you’re going</p>
+      <% if (user) { %>
+        <% if (user.type === 'driver') { %>
+          <p><a class="btn btn-default btn-lg" href="#" role="button">Request a ride &raquo;</a></p>
+        <% } else { %>
+          <p><a class="btn btn-success btn-lg" href="/ride" role="button">Request a ride &raquo;</a></p>
+        <% } %>
+      <% } else { %>
+        <p><a class="btn btn-primary btn-lg" href="/signup" role="button">Sign up as rider &raquo;</a></p>
+      <% } %>
+    </div>
+    <div class="col-md-4">
+      <h2>Start your driving</h2>
+      <p>Work that puts you first</br>Drive when you want, earn what you need</p>
+      <% if (user) { %>
+        <% if (user.type === 'driver') { %>
+          <p><a class="btn btn-success btn-lg" href="/drive" role="button">Update location &raquo;</a></p>
+        <% } else { %>
+          <p><a class="btn btn-default btn-lg" href="#" role="button">Update location &raquo;</a></p>
+        <% } %>
+      <% } else { %>
+        <p><a class="btn btn-primary btn-lg" href="/signup" role="button">Sign up as driver &raquo;</a></p>
+      <% } %>
+    </div>
+    <div class="col-md-4">
+      <h2>Learn more</h2>
+      <p>Get there</br>Your day belongs to you</p>
+      <% if (user) { %>
+        <p><a class="btn btn-success btn-lg" href="/about" role="button">View details &raquo;</a></p>
+      <% } else { %>
+        <p><a class="btn btn-primary btn-lg" href="/about" role="button">View details &raquo;</a></p>
+      <% } %>
+    </div>
+  </div> <!-- /row -->
+</div> <!-- /container -->

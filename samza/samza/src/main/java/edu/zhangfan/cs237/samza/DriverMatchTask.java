@@ -47,7 +47,6 @@ public class DriverMatchTask implements StreamTask, InitableTask {
 
   @Override
   public void init(Config config, TaskContext context) throws Exception {
-    //Initialize stuff (maybe the kv stores?)
     this.freeDriverLocationStore = (KeyValueStore<Integer, Location>) context.getStore("location");
     this.gson = new Gson();
   }

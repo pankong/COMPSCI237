@@ -2,9 +2,7 @@ package edu.zhangfan.cs237.producer;
 
 import com.google.common.io.Resources;
 import com.google.gson.Gson;
-import edu.zhangfan.cs237.common.DriverLocationEvent;
-import edu.zhangfan.cs237.common.Event;
-import edu.zhangfan.cs237.common.Type;
+import edu.zhangfan.cs237.common.MatchEvent;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -13,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class SampleProducer {
+public class TestMatchEventProducer {
 
   public static void main(String[] args) throws IOException {
     Producer<String, String> producer;
@@ -24,14 +22,11 @@ public class SampleProducer {
     }
 
     Gson gson = new Gson();
-
     try {
-      DriverLocationEvent location;
-      Event event;
-      for (int i = 0; i < 100; i++) {
-        // sadly that Java does not natively support keyword arguments.
-        location = new DriverLocationEvent(76, 6177, 3075, 3828, Type.DRIVER_LOCATION);
-        producer.send(new ProducerRecord<>("driver-locations", Integer.toString(location.getBlockId()), gson.toJson(location)));
+      for (int i = 0; i < 10; i++) {
+        // produce one match for every block.
+        MatchEvent match = new MatchEvent(i, i);
+        producer.send(new ProducerRecord<>("match-stream", Integer.toString(i), gson.toJson(match)));
       }
     } catch (Throwable throwable) {
       System.out.println("error");

@@ -27,6 +27,10 @@
     <!-- filtered=true, so we do variable expansion so the yarn package path
       always points to the correct spot on any machine -->
     <file>
+      <source>${basedir}/src/main/resources/log4j.xml</source>
+      <outputDirectory>lib</outputDirectory>
+    </file>
+    <file>
       <source>src/main/config/driverMatchTask.properties</source>
       <outputDirectory>config</outputDirectory>
       <filtered>true</filtered>

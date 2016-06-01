@@ -26,12 +26,12 @@ public class SampleProducer {
     Gson gson = new Gson();
 
     try {
-      DriverLocationEvent location;
-      Event event;
       for (int i = 0; i < 100; i++) {
         // sadly that Java does not natively support keyword arguments.
-        location = new DriverLocationEvent(76, 6177, 3075, 3828, Type.DRIVER_LOCATION);
+        DriverLocationEvent location = new DriverLocationEvent(76, "6177", 3075, 3828, Type.DRIVER_LOCATION);
+        Event event = new Event(76, "6211", 3075, 3823, null, Type.RIDE_REQUEST);
         producer.send(new ProducerRecord<>("driver-locations", Integer.toString(location.getBlockId()), gson.toJson(location)));
+        producer.send(new ProducerRecord<>("events", Integer.toString(event.getBlockId()), gson.toJson(event)));
       }
     } catch (Throwable throwable) {
       System.out.println("error");

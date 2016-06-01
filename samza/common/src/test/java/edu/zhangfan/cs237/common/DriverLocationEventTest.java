@@ -15,7 +15,7 @@ public class DriverLocationEventTest {
   @org.junit.Before
   public void setUp() throws Exception {
     gson = new Gson();
-    event = new DriverLocationEvent(1, 1, 1, 1, Type.DRIVER_LOCATION);
+    event = new DriverLocationEvent(1, "ews", 1, 1, Type.DRIVER_LOCATION);
   }
 
   @Test

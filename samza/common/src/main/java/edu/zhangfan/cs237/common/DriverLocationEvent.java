@@ -2,12 +2,12 @@ package edu.zhangfan.cs237.common;
 
 public class DriverLocationEvent {
   private Integer blockId;
-  private Integer driverId;
+  private String driverId;
   private Integer latitude;
   private Integer longitude;
   private Type type;
 
-  public DriverLocationEvent(Integer blockId, Integer driverId, Integer latitude, Integer longitude, Type type) {
+  public DriverLocationEvent(Integer blockId, String driverId, Integer latitude, Integer longitude, Type type) {
     this.blockId = blockId;
     this.driverId = driverId;
     this.latitude = latitude;
@@ -23,11 +23,11 @@ public class DriverLocationEvent {
     this.blockId = blockId;
   }
 
-  public Integer getDriverId() {
+  public String getDriverId() {
     return driverId;
   }
 
-  public void setDriverId(Integer driverId) {
+  public void setDriverId(String driverId) {
     this.driverId = driverId;
   }
 

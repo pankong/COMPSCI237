@@ -4,13 +4,13 @@ package edu.zhangfan.cs237.common;
 public class Event {
 
   private Integer blockId;
-  private Integer identifier;
+  private String identifier;
   private Integer longitude;
   private Integer latitude;
   private Status status;
   private Type type;
 
-  public Event(Integer blockId, Integer identifier, Integer longitude, Integer latitude, Status status, Type type) {
+  public Event(Integer blockId, String identifier, Integer longitude, Integer latitude, Status status, Type type) {
     this.blockId = blockId;
     this.identifier = identifier;
     this.longitude = longitude;
@@ -27,11 +27,11 @@ public class Event {
     this.blockId = blockId;
   }
 
-  public Integer getIdentifier() {
+  public String getIdentifier() {
     return identifier;
   }
 
-  public void setIdentifier(Integer identifier) {
+  public void setIdentifier(String identifier) {
     this.identifier = identifier;
   }
 

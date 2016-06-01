@@ -1,27 +1,27 @@
 package edu.zhangfan.cs237.common;
 
 public class MatchEvent {
-  Integer riderId;
-  Integer driverId;
+  private String riderId;
+  private String driverId;
 
-  public MatchEvent(Integer riderId, Integer driverId) {
+  public MatchEvent(String riderId, String driverId) {
     this.riderId = riderId;
     this.driverId = driverId;
   }
 
-  public Integer getRiderId() {
+  public String getRiderId() {
     return riderId;
   }
 
-  public void setRiderId(Integer riderId) {
+  public void setRiderId(String riderId) {
     this.riderId = riderId;
   }
 
-  public Integer getDriverId() {
+  public String getDriverId() {
     return driverId;
   }
 
-  public void setDriverId(Integer driverId) {
+  public void setDriverId(String driverId) {
     this.driverId = driverId;
   }
 }

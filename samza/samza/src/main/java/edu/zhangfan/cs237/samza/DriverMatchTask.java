@@ -38,16 +38,22 @@ class Location {
   public double distanceTo(Location loc) {
     return Math.sqrt(Math.pow((this.latitude - loc.latitude), 2) + Math.pow((this.longitude - loc.latitude), 2));
   }
+
+  @Override
+  public String toString() {
+    Gson gson = new Gson();
+    return gson.toJson(this);
+  }
 }
 
 public class DriverMatchTask implements StreamTask, InitableTask {
-  private KeyValueStore<Integer, Location> freeDriverLocationStore;
+  private KeyValueStore<String, String> freeDriverLocationStore;
   //  private KeyValueStore<Integer, String> driverListStore;
   private Gson gson;
 
   @Override
   public void init(Config config, TaskContext context) throws Exception {
-    this.freeDriverLocationStore = (KeyValueStore<Integer, Location>) context.getStore("location");
+    this.freeDriverLocationStore = (KeyValueStore<String, String>) context.getStore("location");
     this.gson = new Gson();
   }
 
@@ -57,32 +63,37 @@ public class DriverMatchTask implements StreamTask, InitableTask {
 
     String topic = envelope.getSystemStreamPartition().getStream();
     String message = (String) envelope.getMessage();
+    System.out.println(topic);
     switch (topic) {
       case "driver-locations":
         DriverLocationEvent driverLocationEvent = gson.fromJson(message, DriverLocationEvent.class);
         freeDriverLocationStore.put(driverLocationEvent.getDriverId(),
-            new Location(driverLocationEvent.getLongitude(), driverLocationEvent.getLatitude()));
+            new Location(driverLocationEvent.getLongitude(), driverLocationEvent.getLatitude()).toString());
         break;
       case "events":
         Event event = gson.fromJson(message, Event.class);
         switch (event.getType()) {
           case RIDE_REQUEST:
             double minDistance = Double.MAX_VALUE;
-            Integer closetDriverId = null;
+            String closetDriverId = null;
             Location riderLocation = new Location(event.getLongitude(), event.getLatitude());
-            for (KeyValueIterator<Integer, Location> it = freeDriverLocationStore.all(); it.hasNext();  ) {
-              Entry<Integer, Location> entry = it.next();
-              Location loc = entry.getValue();
-              Integer driverId = entry.getKey();
+            for (KeyValueIterator<String, String> it = freeDriverLocationStore.all(); it.hasNext();  ) {
+              Entry<String, String> entry = it.next();
+              Location loc = gson.fromJson(entry.getValue(), Location.class);
+              String driverId = entry.getKey();
               if (loc.distanceTo(riderLocation) < minDistance) {
                 closetDriverId = driverId;
               }
             }
-            if (closetDriverId == null) {
+            if (closetDriverId != null) {
+              System.out.println("Match succeed");
+              MatchEvent matchEvent = new MatchEvent(event.getIdentifier(), closetDriverId);
+              // TODO output stream ID.
+              messageCollector.send(
+                  new OutgoingMessageEnvelope(DriverMatchConfig.MATCH_STREAM, gson.toJson(matchEvent)));
+            } else {
               throw new Exception("No match found");
             }
-            MatchEvent matchEvent = new MatchEvent(event.getIdentifier(), closetDriverId);
-            messageCollector.send(new OutgoingMessageEnvelope(DriverMatchConfig.MATCH_STREAM, event.getBlockId(), gson.toJson(matchEvent)));
             break;
           case LEAVING_BLOCK:
             // delete driver from this block
@@ -95,12 +106,14 @@ public class DriverMatchTask implements StreamTask, InitableTask {
             }
             break;
           case RIDE_COMPLETE:
-            freeDriverLocationStore.put(event.getIdentifier(), new Location(event.getLongitude(), event.getLatitude()));
+            freeDriverLocationStore.put(event.getIdentifier(),
+                new Location(event.getLongitude(), event.getLatitude()).toString());
             break;
           case ENTERING_BLOCK:
             switch (event.getStatus()) {
               case AVAILABLE:
-                freeDriverLocationStore.put(event.getIdentifier(), new Location(event.getLongitude(), event.getLatitude()));
+                freeDriverLocationStore.put(event.getIdentifier(),
+                    new Location(event.getLongitude(), event.getLatitude()).toString());
                 break;
               case UNAVAILABLE:
                 // TODO handle busy driver location

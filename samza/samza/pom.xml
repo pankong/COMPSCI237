@@ -41,7 +41,6 @@
       <classifier>dist</classifier>
       <type>tgz</type>
       <version>${samza.version}</version>
-      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.apache.samza</groupId>
@@ -84,6 +83,11 @@
       <version>1.6.2</version>
     </dependency>
     <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-jaxrs</artifactId>
+      <version>1.8.5</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-annotations</artifactId>
       <version>${hadoop.version}</version>
@@ -118,12 +122,6 @@
       <artifactId>hadoop-yarn-common</artifactId>
       <version>${hadoop.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-jaxrs</artifactId>
-      <version>1.9.13</version>
-    </dependency>
-
   </dependencies>
 
   <build>

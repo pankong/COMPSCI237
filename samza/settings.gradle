@@ -1,0 +1,8 @@
+rootProject.name = 'cs237'
+include ':samza'
+include ':producer'
+include ':common'
+
+project(':samza').projectDir = "$rootDir/samza" as File
+project(':producer').projectDir = "$rootDir/producer" as File
+project(':common').projectDir = "$rootDir/common" as File

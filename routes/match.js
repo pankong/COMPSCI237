@@ -12,10 +12,14 @@ router.get('/ride', passportConfig.isAuthenticated, function(req, res) {
   res.render('match/ride');
 });
 
+router.get('/drive', passportConfig.isAuthenticated, function(req, res) {
+  res.render('match/drive');
+});
+
 /******************************************************************************/
 // Kafka Proxy, uncomment this section when testing kafka
 // When using Samza as backend, make changes on message topic and other routes
-/*
+
 var kafka = require('kafka-node');
 var HighLevelProducer = kafka.HighLevelProducer;
 var Client = kafka.Client;
@@ -65,10 +69,27 @@ producer.on('ready', function () {
         }
       ]);
     });
+
+    router.post('/drive', passportConfig.isAuthenticated, function(req, res, next) {
+      User.findById(req.user._id, function(err, driver) {
+        if (err) return next(err);
+        driver.location.longitude = req.body.longitude;
+        driver.location.latitude = req.body.latitude;
+        driver.district = req.body.district;
+        driver.save(function(err) {
+          if (err) return next(err);
+        });
+        util.log("Driver " + driver.profile.name + " sent in location update");
+        util.log("    " + req.body.longitude);
+        util.log("    " + req.body.latitude);
+        util.log("    " + req.body.district);
+      });
+    });
 });
-/*
+
 /******************************************************************************/
 
+/*
 router.post('/ride', function(req, res, next) {
   util.log("Rider " + req.user.profile.name + " requested a ride");
   async.waterfall([
@@ -114,10 +135,6 @@ router.post('/ride', function(req, res, next) {
       }
     }
   ]);
-})
-
-router.get('/drive', passportConfig.isAuthenticated, function(req, res) {
-  res.render('match/drive');
 });
 
 router.post('/drive', passportConfig.isAuthenticated, function(req, res, next) {
@@ -135,9 +152,6 @@ router.post('/drive', passportConfig.isAuthenticated, function(req, res, next) {
     util.log("    " + req.body.district);
   });
 });
-
-router.get('/map', function(req, res) {
-  res.render('match/maptest');
-});
+*/
 
 module.exports = router;

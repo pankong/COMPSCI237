@@ -122,7 +122,7 @@ exports.initDriverLocation = function() {
         if (err) {
           return next(err);
         } else {
-          console.log(driver.profile.name + " location initialied!");
+          console.log(driver.profile.name + " locations initialied!");
         }
       });
     });

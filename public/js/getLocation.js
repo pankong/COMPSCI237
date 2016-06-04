@@ -95,7 +95,7 @@ function requestRide() {
     navigator.geolocation.getCurrentPosition(function(position) {
       map.panTo({lat: position.coords.latitude, lng: position.coords.longitude});
       //createArrowMarker({lat: position.coords.latitude, lng: position.coords.longitude}, null).setMap(map);
-      createMarker({lat: position.coords.latitude, lng: position.coords.longitude}, null, "arrow").setMap(map);
+      createMarker({lat: position.coords.latitude, lng: position.coords.longitude}, null, "default").setMap(map);
       postRiderPosition(position);
     });
     spinner.spin();
@@ -250,6 +250,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 function createMarker(position, label, type) {
   const markerType = {
+    "default": null,
     "circle": google.maps.SymbolPath.CIRCLE,
     "arrow": google.maps.SymbolPath.BACKWARD_CLOSED_ARROW
   };

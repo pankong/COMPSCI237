@@ -7,9 +7,67 @@ const math = require('mathjs');
 var User = require('../models/user.js');
 var passportConfig = require('../config/passport');
 
+
 router.get('/ride', passportConfig.isAuthenticated, function(req, res) {
   res.render('match/ride');
 });
+
+/******************************************************************************/
+// Kafka Proxy, uncomment this section when testing kafka
+// When using Samza as backend, make changes on message topic and other routes
+/*
+var kafka = require('kafka-node');
+var HighLevelProducer = kafka.HighLevelProducer;
+var Client = kafka.Client;
+var client1 = new Client();
+var topic = "topic1"
+var count = 2, rets = 0;
+var producer = new HighLevelProducer(client1);
+
+const server = require("../server.js");
+
+producer.on('ready', function () {
+    console.log("Producer ready!");
+
+    router.post('/ride', function(req, res, next) {
+      util.log("Rider " + req.user.profile.name + " requested a ride");
+      async.waterfall([
+        function(callback) {
+          var messageObj = {}
+          messageObj.blockId = req.body.district;
+          messageObj.riderId = req.user._id;
+          messageObj.latitude = req.body.latitude;
+          messageObj.longitude = req.body.longitude;
+          messageObj.type = "DRIVER_LOCATION";
+          var message = JSON.stringify(messageObj);
+          producer.send([
+            {topic: topic, messages: [message] }
+          ], function (err, data) {
+              if (err) util.log(err);
+              else util.log('User %s message sent on Producer side', req.user._id);
+          });
+          callback(null, req.user._id);
+        },
+        function(riderId, callback) {
+          var interval = 1000;
+          var intervalId = setInterval(setTime, interval);
+          var matching = null;
+          function setTime() {
+            matching = server.queryMatching(riderId);
+            if (matching != null) {
+              clearInterval(intervalId);
+              callback(null, matching);
+            }
+          }
+        },
+        function(matching, callback) {
+          res.end("Nearest Driver is: " + matching.riderId + " \n");
+        }
+      ]);
+    });
+});
+/*
+/******************************************************************************/
 
 router.post('/ride', function(req, res, next) {
   util.log("Rider " + req.user.profile.name + " requested a ride");
@@ -18,11 +76,9 @@ router.post('/ride', function(req, res, next) {
       User.find({type: 'driver', district: req.body.district}, function(err, drivers) {
         if (drivers.length == 0) {
           User.find({type: 'driver'}, function(err, drivers) {
-            console.log("have to search whole db");
             callback(null, drivers);
           });
         } else {
-          console.log("same distric found");
           callback(null, drivers);
         }
       });
@@ -58,11 +114,11 @@ router.post('/ride', function(req, res, next) {
       }
     }
   ]);
-});
+})
 
 router.get('/drive', passportConfig.isAuthenticated, function(req, res) {
   res.render('match/drive');
-})
+});
 
 router.post('/drive', passportConfig.isAuthenticated, function(req, res, next) {
   User.findById(req.user._id, function(err, driver) {
@@ -78,10 +134,10 @@ router.post('/drive', passportConfig.isAuthenticated, function(req, res, next) {
     util.log("    " + req.body.latitude);
     util.log("    " + req.body.district);
   });
-})
+});
 
 router.get('/map', function(req, res) {
   res.render('match/maptest');
-})
+});
 
 module.exports = router;

@@ -1,3 +1,3 @@
 #!/bin/bash
 cd /tmp/epub/
-sudo node server.js
+sudo nohup node server.js &

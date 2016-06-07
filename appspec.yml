@@ -1,6 +1,8 @@
 version: 0.0
 os: linux
-
+files:
+  - source: /
+    destination: /tmp/epub
 hooks:
   AfterInstall:
     - location: scripts/install_dependencies.sh

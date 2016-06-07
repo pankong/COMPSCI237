@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo node ../server.js
+sudo node server.js

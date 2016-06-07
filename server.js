@@ -14,7 +14,7 @@ const passport = require('passport');
 const util = require('util');
 var config = require('./config');
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 8080;
 
 var User = require('./models/user.js');
 

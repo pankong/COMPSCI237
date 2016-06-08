@@ -16,7 +16,7 @@ const https = require('https');
 const fs = require('fs');
 
 var config = require('./config');
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 443;
 var User = require('./models/user.js');
 var app = express();
 
@@ -129,7 +129,7 @@ const options = {
   passphrase: 'asdf1234'
 };
 
-https.createServer(options, app).listen(8000, function(err) {
+https.createServer(options, app).listen(port, function(err) {
   if (err) throw err;
   console.log("Server is Running on port " + port);
 });

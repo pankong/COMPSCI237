@@ -80,11 +80,10 @@ app.use(matchRoutes);
 /******************************************************************************/
 // Kafka Proxy, uncomment this section when testing kafka
 // When using Samza as backend, make changes on message topic and other logic
-/*
 var kafka = require('kafka-node');
 var HighLevelConsumer = kafka.HighLevelConsumer;
 var Client = kafka.Client;
-var topic = "topic1";
+var topic = "match-stream";
 var client = new Client('localhost:2181');
 var topics = [ { topic: topic }];
 var options = { autoCommit: true, fetchMaxWaitMs: 1000, fetchMaxBytes: 1024*1024 };
@@ -113,7 +112,6 @@ exports.queryMatching = (riderId) => {
   }
   return result;
 }
-*/
 /******************************************************************************/
 
 

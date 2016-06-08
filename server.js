@@ -12,11 +12,13 @@ const flash = require('express-flash');
 const MongoStore = require('connect-mongo/es5')(session);
 const passport = require('passport');
 const util = require('util');
+const http = require("http");
 const https = require('https');
 const fs = require('fs');
 
 var config = require('./config');
-var port = process.env.PORT || 443;
+var httpPort = process.env.PORT || 80;
+var httpsPort = 443;
 var User = require('./models/user.js');
 var app = express();
 
@@ -129,7 +131,12 @@ const options = {
   passphrase: 'asdf1234'
 };
 
-https.createServer(options, app).listen(port, function(err) {
+http.createServer(app).listen(httpPort, function(err) {
   if (err) throw err;
-  console.log("Server is Running on port " + port);
+  console.log("Server is Running on port " + httpPort);
+});
+
+https.createServer(options, app).listen(httpsPort, function(err) {
+  if (err) throw err;
+  console.log("Server is Running on port " + httpsPort);
 });

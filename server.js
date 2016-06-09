@@ -17,27 +17,27 @@ const https = require('https');
 const fs = require('fs');
 
 var config = require('./config');
-var httpPort = process.env.PORT || 80;
-var httpsPort = 443;
+var httpPort = process.env.PORT || 8080;
+var httpsPort = 8443;
 var User = require('./models/user.js');
 var app = express();
 
 // connect to MongoDB
-
+/*
 mongoose.connect(config.getMongoDbConnectionString(), function(err) {
   if (err) console.log(err);
   else console.log("Connected to MongoDB");
 });
-
+*/
 
 /*  start MongoDB with command "mongod --dbpath <path to data directory> --port 27017" */
 // connect to Local MongoDB
-/*
+
 mongoose.connect('mongodb://localhost:27017/COMPSCI237', function(err) {
   if (err) console.log(err);
   else console.log("Connected to Local MongoDB");
 });
-*/
+
 
 // set static assets serving folder
 app.use('/assets', express.static(__dirname + '/public'));
@@ -118,8 +118,8 @@ exports.queryMatching = (riderId) => {
 
 
 const performanceTest = require("./test/performanceTest");
-//performanceTest.generateUser(20, "driver");
-//performanceTest.generateUser(20, "rider");
+performanceTest.generateUser(1000, "driver");
+performanceTest.generateUser(1000, "rider");
 //performanceTest.initDriverLocation();
 
 //performanceTest.testBatchPerf(100, 0.8);

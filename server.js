@@ -17,27 +17,27 @@ const https = require('https');
 const fs = require('fs');
 
 var config = require('./config');
-var httpPort = process.env.PORT || 8080;
-var httpsPort = 8443;
+var httpPort = process.env.PORT || 80;
+var httpsPort = 443;
 var User = require('./models/user.js');
 var app = express();
 
 // connect to MongoDB
-/*
+
 mongoose.connect(config.getMongoDbConnectionString(), function(err) {
   if (err) console.log(err);
   else console.log("Connected to MongoDB");
 });
-*/
+
 
 /*  start MongoDB with command "mongod --dbpath <path to data directory> --port 27017" */
 // connect to Local MongoDB
-
+/*
 mongoose.connect('mongodb://localhost:27017/COMPSCI237', function(err) {
   if (err) console.log(err);
   else console.log("Connected to Local MongoDB");
 });
-
+*/
 
 // set static assets serving folder
 app.use('/assets', express.static(__dirname + '/public'));
@@ -80,6 +80,7 @@ app.use(matchRoutes);
 /******************************************************************************/
 // Kafka Proxy, uncomment this section when testing kafka
 // When using Samza as backend, make changes on message topic and other logic
+/*
 var kafka = require('kafka-node');
 var HighLevelConsumer = kafka.HighLevelConsumer;
 var Client = kafka.Client;
@@ -112,15 +113,16 @@ exports.queryMatching = (riderId) => {
   }
   return result;
 }
+*/
 /******************************************************************************/
 
 
 const performanceTest = require("./test/performanceTest");
-performanceTest.generateUser(1000, "driver");
-performanceTest.generateUser(1000, "rider");
+//performanceTest.generateUser(100, "driver");
+//performanceTest.generateUser(100, "rider");
 //performanceTest.initDriverLocation();
 
-//performanceTest.testBatchPerf(100, 0.8);
+//performanceTest.testBatchPerf(30000, 0);
 
 
 const options = {

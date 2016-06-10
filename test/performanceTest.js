@@ -4,14 +4,13 @@ const User = require('../models/user.js');
 const util = require('util');
 const math = require('mathjs');
 
-var totalUsers = 0;
+var totalUsers = 1000;
 var messageCount = 0;
 var timeStamps = [];
 var latencies = [];
 
 exports.generateUser = function(number, type) {
-  totalUsers += (number / 2);
-  for (let i = 0; i < number; i++) {
+  for (let i = totalUsers; i < number + totalUsers; i++) {
     var user = new User();
     user.email = type + i + "@gmail.com";
     user.password = "123";
@@ -71,11 +70,13 @@ function updateDriverLocation(message) {
       } else {
         //util.log("message" + message.count + ": driver location updated!");
         var finishTime = new Date().getTime();
-        timeStamps.push(finishTime);
+        // timeStamps.push(finishTime);
         latencies.push(finishTime - message.createTime);
         if (message.count === messageCount) {
-          for (let i = 0; i < timeStamps.length; i++) {
-            //console.log(timeStamps[i]);
+          // for (let i = 0; i < timeStamps.length; i++) {
+          //   console.log(timeStamps[i]);
+          // }
+          for (let i = 0; i < latencies.length; i++) {
             console.log(latencies[i]);
           }
         }
@@ -110,11 +111,13 @@ function findClosestDriver(message, drivers) {
   });
   //util.log("message" + message.count + ": rider request matched!");
   var finishTime = new Date().getTime();
-  timeStamps.push(finishTime);
+  // timeStamps.push(finishTime);
   latencies.push(finishTime - message.createTime);
   if (message.count === messageCount) {
-    for (let i = 0; i < timeStamps.length; i++) {
-      //console.log(timeStamps[i]);
+    // for (let i = 0; i < timeStamps.length; i++) {
+    //   console.log(timeStamps[i]);
+    // }
+    for (let i = 0; i < latencies.length; i++) {
       console.log(latencies[i]);
     }
   }
